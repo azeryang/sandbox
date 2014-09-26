@@ -1,0 +1,8 @@
+from nvidia sdk 9
+
+Soft ShadowsFor a direct link to this sample, right-click and copy the URL (shortcut) of this link icon.
+
+This sample shows how to use conditional branching to compute filtered soft shadows efficiently. This technique could also be applied to accelerate other filtering algorithms to increase performance significantly on GPUs that support Shader Model 3.0.
+
+Whitepaper: http://http.download.nvidia.com/developer/SDK/Individual_Samples/DEMOS/Direct3D9/src/HLSL_SoftShadows/docs/HLSL_SoftShadows.pdf
+demo: http://http.download.nvidia.com/developer/SDK/Individual_Samples/DEMOS/Direct3D9/HLSL_SoftShadows.zip
