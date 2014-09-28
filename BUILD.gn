@@ -1,4 +1,4 @@
 
 group("sandbox") {
-  deps = []
+  deps = ["base/sampleapp:sandbox_sampleapp"]
 }
