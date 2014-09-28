@@ -1,4 +1,7 @@
 
 group("sandbox") {
-  deps = ["basic/sampleapp:sandbox_sampleapp"]
+  deps = [
+    "basic/sampleapp:sandbox_sampleapp"
+    "basic/mesh:sandbox_basic_mesh"
+  ]
 }

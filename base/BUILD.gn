@@ -1,4 +1,12 @@
 
+static_library("sandbox_loader") {
+  sources = ["mesh.cc", "mesh.h"]
+  deps = [
+    "//third_party/assimp:assimp",
+    "//azer/util:azer_util",
+    "//azer:azer",
+  ]
+}
 
 static_library("sandbox_wxapp") {
   sources = [
@@ -10,5 +18,17 @@ static_library("sandbox_wxapp") {
   deps = [
     "//third_party/wxwidget:wxwidget"
     "//azer/render:render",
+  ]
+}
+
+static_library("sandbox_base") {
+  sources = [
+    "dummy.cc",
+    "camera_control.cc",
+    "camera_control.h",
+  ]
+  deps = [
+    ":sandbox_loader",
+    ":sandbox_wxapp",
   ]
 }
