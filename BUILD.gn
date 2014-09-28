@@ -2,6 +2,7 @@
 group("sandbox") {
   deps = [
     "basic/sampleapp:sandbox_sampleapp"
+    "basic/triangle:sandbox_basic_triangle"
     "basic/mesh:sandbox_basic_mesh"
   ]
 }

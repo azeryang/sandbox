@@ -21,7 +21,8 @@ bool wxSampleFrame::Init() {
 }
 
 bool wxSampleFrame::CreateRender() {
-  panel_ = new RenderPanel(this);
+  panel_ = new AzerCanvas(this, wxID_ANY, wxDefaultPosition,
+                          wxSize(800, 600), wxSUNKEN_BORDER);
   wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
   sizer->Add(panel_, 1, wxEXPAND);
   SetSizer(sizer);
@@ -49,7 +50,7 @@ void wxSampleFrame::onIdle(wxIdleEvent& evt) {
   evt.RequestMore();
   if (render_loop_on_) {
     delegate_->OnRenderScene(prev_time_, prev_delta_);
-  
+    render_system_->Present();
     ::base::TimeTicks now = ::base::TimeTicks::HighResNow();
     ::base::TimeDelta delta = now - prev_frame_;
     total_ticking_ += delta;
@@ -57,8 +58,6 @@ void wxSampleFrame::onIdle(wxIdleEvent& evt) {
     prev_time_ = total_ticking_.InSecondsF();
     prev_delta_ = (float)delta.InSecondsF();
     delegate_->OnUpdateScene(prev_time_, prev_delta_);
-  
-    render_system_->Present();
     prev_frame_ = now;
   }
 }

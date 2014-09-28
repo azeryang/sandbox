@@ -1,0 +1,15 @@
+import("//build/templates/afx.gni")
+
+afx("sandbox_basic_triangle_effect") {
+  source = "diffuse.afx"
+  filename = "diffuse"
+}
+executable("sandbox_basic_triangle") {
+  sources = ["main.cc"]
+  deps = [
+    "//third_party/wxwidget:wxwidget"
+    "//sandbox/base:sandbox_base",
+    "//base:appinit",
+    ":sandbox_basic_triangle_effect",
+  ]
+}

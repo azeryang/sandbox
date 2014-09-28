@@ -11,11 +11,16 @@
 #include "sandbox/base/wxsampleapp.h"
 
 class wxSampleApp;
-class RenderPanel : public wxPanel {
+class AzerCanvas : public wxWindow {
  public:
-  RenderPanel(wxFrame* frame) : wxPanel(frame) {}
+  AzerCanvas(wxWindow *parent, wxWindowID id = wxID_ANY,
+             const wxPoint& pos = wxDefaultPosition,
+             const wxSize& size = wxDefaultSize, long style = 0,
+             const wxString& name = wxT("TestGLCanvas"))
+      :  wxWindow(parent, id, pos, size, style|wxFULL_REPAINT_ON_RESIZE, name) {
+  }
  private:
-  DISALLOW_COPY_AND_ASSIGN(RenderPanel);
+  DISALLOW_COPY_AND_ASSIGN(AzerCanvas);
 };
 
 class wxSampleFrame: public wxFrame {
@@ -30,7 +35,7 @@ class wxSampleFrame: public wxFrame {
 
   bool CreateRender();
 
-  RenderPanel* panel_;
+  AzerCanvas* panel_;
   wxSampleApp::Delegate* delegate_;
   bool render_loop_on_;
 

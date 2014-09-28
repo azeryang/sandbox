@@ -50,20 +50,22 @@ bool MainDelegate::OnInit() {
     return false;
   }
 
-  light_.dir = azer::Vector4(0.0f, 0.0f, 0.75f, 0.0f);
+  light_.dir = azer::Vector4(0.0f, -0.3f, 0.75f, 0.0f);
   light_.diffuse = azer::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-  light_.ambient = azer::Vector4(0.05f, 0.05f, 0.05f, 1.0f);
+  light_.ambient = azer::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
 
   mesh_->SetLight(light_);
-  camera_.SetPosition(azer::Vector3(0.0f, 20.0f, 30.0f));
+  camera_.SetPosition(azer::Vector3(0.0f, 400.0f, 400.0f));
   camera_.SetLookAt(azer::Vector3(0.0f, 0.0f, 0.0f));
+  azer::Renderer* renderer = rs->GetDefaultRenderer();
+  renderer->EnableDepthTest(true);
   return true; 
 }
 
 void MainDelegate::OnUpdateScene(double time, float delta_time) {
   float rspeed = 3.14f * 2.0f / 4.0f;
   azer::Radians camera_speed(azer::kPI / 2.0f);
-  UpdatedownCamera(&camera_, camera_speed, delta_time);
+  UpdatedownCamera(&camera_, 50.0f, camera_speed, delta_time);
   mesh_->OnUpdateScene(camera_);
 }
 
@@ -107,10 +109,9 @@ void MyMesh::UpdateAll(azer::VertexData* vdata, azer::IndicesData* idata) {
 }
 
 void MyMesh::OnUpdateScene(const azer::Camera& camera) {
-  azer::Matrix4 world = std::move(azer::Scale(0.1f, 0.1f, 0.1f));
-  effect_->SetWorld(world);
+  effect_->SetWorld(azer::Matrix4::kIdentity);
   effect_->SetDirLight(light_);
-  effect_->SetPVW(camera.GetProjViewMatrix() * world);
+  effect_->SetPVW(camera.GetProjViewMatrix());
 }
 
 int main(int argc, char* argv[]) {

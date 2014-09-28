@@ -12,14 +12,10 @@ class wxString;
 
 class wxSampleApp {
  public:
-  class Delegate {
+  class Delegate : public SampleApp::Delegate {
    public:
     Delegate() {}
     virtual ~Delegate() {}
-    virtual bool OnInit() = 0;
-    virtual void OnUpdateScene(double time, float delta_time) = 0;
-    virtual void OnRenderScene(double time, float delta_time) = 0;
-    virtual void OnQuit() = 0;
     virtual wxSampleFrame* CreateFrame(const wxString& title,
                                        const wxPoint& pos, const wxSize& size);
    protected:
