@@ -23,11 +23,9 @@ class wxSampleFrame: public wxFrame {
   wxSampleFrame(wxSampleApp::Delegate* delegate, const wxString& title,
               const wxPoint& pos, const wxSize& size);
 
-  virtual void CreateUI();
+  virtual void CreateUI() {};
   virtual bool Init();
  private:
-  void OnHello(wxCommandEvent& event);
-  void OnExit(wxCommandEvent& event);
   void onIdle(wxIdleEvent& evt);
 
   bool CreateRender();

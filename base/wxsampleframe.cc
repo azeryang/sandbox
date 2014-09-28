@@ -1,9 +1,5 @@
 #include "sandbox/base/wxsampleframe.h"
 
-enum {
- ID_Hello = 1
-};
-
 wxSampleFrame::wxSampleFrame(wxSampleApp::Delegate* delegate, const wxString& title,
                          const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size)
@@ -13,7 +9,6 @@ wxSampleFrame::wxSampleFrame(wxSampleApp::Delegate* delegate, const wxString& ti
     , prev_time_(0)
     , prev_delta_(0)
     , host_(azer::WindowHost::Options()) {
-  CreateUI();
 }
 
 bool wxSampleFrame::Init() {
@@ -21,6 +16,7 @@ bool wxSampleFrame::Init() {
     return false;
   }
 
+  CreateUI();
   return true;
 }
 
@@ -44,32 +40,7 @@ bool wxSampleFrame::CreateRender() {
   return true;
 }
 
-void wxSampleFrame::CreateUI() {
-  wxMenu *menuFile = new wxMenu;
-  menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
-                   "Help string shown in status bar for this menu item");
-  menuFile->AppendSeparator();
-  menuFile->Append(wxID_EXIT);
-  wxMenu *menuHelp = new wxMenu;
-  menuHelp->Append(wxID_ABOUT);
-  wxMenuBar *menuBar = new wxMenuBar;
-  menuBar->Append( menuFile, "&File" );
-  menuBar->Append( menuHelp, "&Help" );
-  SetMenuBar( menuBar );
-  CreateStatusBar();
-  SetStatusText( "Welcome to wxWidgets!" );
-}
-
-void wxSampleFrame::OnExit(wxCommandEvent& event) {
-  Close(true);
-}
-
-void wxSampleFrame::OnHello(wxCommandEvent& event) {
-  wxLogMessage("Hello world from wxWidgets!");
-}
 wxBEGIN_EVENT_TABLE(wxSampleFrame, wxFrame)
-EVT_MENU(ID_Hello,   wxSampleFrame::OnHello)
-EVT_MENU(wxID_EXIT,  wxSampleFrame::OnExit)
 EVT_IDLE(wxSampleFrame::onIdle)
 wxEND_EVENT_TABLE()
 

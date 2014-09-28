@@ -2,6 +2,7 @@
 executable("sandbox_sampleapp") {
   sources = ["main.cc"]
   deps = [
+    "//third_party/wxwidget:wxwidget"
     "//sandbox/base:sandbox_wxapp",
     "//base:appinit",
   ]

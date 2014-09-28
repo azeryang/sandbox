@@ -21,7 +21,7 @@ class wxSampleApp {
     virtual void OnRenderScene(double time, float delta_time) = 0;
     virtual void OnQuit() = 0;
     virtual wxSampleFrame* CreateFrame(const wxString& title,
-                                     const wxPoint& pos, const wxSize& size);
+                                       const wxPoint& pos, const wxSize& size);
    protected:
     wxSampleApp* app_;
 

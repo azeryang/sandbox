@@ -18,8 +18,8 @@ void wxSampleApp::MainLoop(int argc, char* argv[], wxSampleApp* app) {
   wxEntryCleanup();
 }
 
-RenderFrame* wxSampleApp::Delegate::CreateFrame(const wxString& title,
+wxSampleFrame* wxSampleApp::Delegate::CreateFrame(const wxString& title,
                                                 const wxPoint& pos,
                                                 const wxSize& size) {
-  return new RenderFrame(this, title, pos, size);
+  return new wxSampleFrame(this, title, pos, size);
 }
