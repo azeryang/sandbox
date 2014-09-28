@@ -1,6 +1,19 @@
 
-executable("sandbox_sampleapp") {
-  sources = ["main.cc"]
+group("sandbox_sampleapp") {
+  deps = [":sandbox_sampleapp1", ":sandbox_sampleapp2"]
+}
+
+executable("sandbox_sampleapp1") {
+  sources = ["sample1.cc"]
+  deps = [
+    "//third_party/wxwidget:wxwidget"
+    "//sandbox/base:sandbox_wxapp",
+    "//base:appinit",
+  ]
+}
+
+executable("sandbox_sampleapp2") {
+  sources = ["sample2.cc"]
   deps = [
     "//third_party/wxwidget:wxwidget"
     "//sandbox/base:sandbox_wxapp",
