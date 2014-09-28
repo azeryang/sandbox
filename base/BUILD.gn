@@ -1,8 +1,14 @@
 
 
-static_library("sandbox_base") {
-  sources = ["wxsampleapp.cc", "wxsampleapp.h"]
-  deps = ["//third_party/wxwidget:wxwidget"]
-  configs -= ["//build/config/win:console"]
-  configs += ["//build/config/win:windowed"]
+static_library("sandbox_wxapp") {
+  sources = [
+    "wxsampleapp.cc",
+    "wxsampleapp.h",
+    "wxsampleframe.cc",
+    "wxsampleframe.h"
+  ]
+  deps = [
+    "//third_party/wxwidget:wxwidget"
+    "//azer/render:render",
+  ]
 }

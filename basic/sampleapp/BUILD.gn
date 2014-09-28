@@ -1,7 +1,8 @@
 
 executable("sandbox_sampleapp") {
   sources = ["main.cc"]
-  deps = ["//third_party/wxwidget:wxwidget"]
-  configs -= ["//build/config/win:console"]
-  configs += ["//build/config/win:windowed"]
+  deps = [
+    "//sandbox/base:sandbox_wxapp",
+    "//base:appinit",
+  ]
 }
