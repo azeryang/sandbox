@@ -5,17 +5,38 @@
 #include <wx/wx.h>
 #endif
 
+class RenderPanel : public wxPanel {
+ public:
+  RenderPanel(wxFrame* frame);
+  void render();
+};
+
+RenderPanel::RenderPanel(wxFrame* frame)
+    : wxPanel(frame) {
+}
+
+void RenderPanel::render() {
+}
+
+class MyFrame;
 class MyApp: public wxApp {
  public:
   virtual bool OnInit();
+  void onIdle(wxIdleEvent& evt);
+ private:
+  MyFrame* frame_;
+  bool render_loop_on_;
 };
 
 class MyFrame: public wxFrame {
  public:
   MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+  void OnRender() {panel_->render();}
  private:
   void OnHello(wxCommandEvent& event);
   void OnExit(wxCommandEvent& event);
+
+  RenderPanel* panel_;
   wxDECLARE_EVENT_TABLE();
 };
 enum {
@@ -28,8 +49,10 @@ wxEND_EVENT_TABLE()
 wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit() {
-  MyFrame *frame = new MyFrame("Hello World", wxPoint(50, 50), wxSize(800, 600));
-  frame->Show(true);
+  render_loop_on_ = false;
+  frame_ = new MyFrame("Hello World", wxPoint(50, 50), wxSize(800, 600));
+  render_loop_on_ = true;
+  frame_->Show(true);
   return true;
 }
 
@@ -48,6 +71,13 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
   SetMenuBar( menuBar );
   CreateStatusBar();
   SetStatusText( "Welcome to wxWidgets!" );
+
+  // render panel;
+  panel_ = new RenderPanel(this);
+  wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+  sizer->Add(panel_, 1, wxEXPAND);
+  SetSizer(sizer);
+  Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(MyApp::onIdle));
 }
 void MyFrame::OnExit(wxCommandEvent& event) {
   Close(true);
@@ -55,4 +85,11 @@ void MyFrame::OnExit(wxCommandEvent& event) {
 
 void MyFrame::OnHello(wxCommandEvent& event) {
   wxLogMessage("Hello world from wxWidgets!");
+}
+
+void MyApp::onIdle(wxIdleEvent& evt) {
+  if (render_loop_on_) {
+    frame_->OnRender();
+    evt.RequestMore();
+  }
 }
