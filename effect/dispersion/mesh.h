@@ -13,10 +13,10 @@ class MyMesh : public Mesh {
   virtual void UpdateAll(azer::VertexData* vdata, azer::IndicesData* idata);
 
   void OnUpdateScene(const azer::Camera& camera);
-  void SetLight(const DirLight& l) { light_ = l;}
+  void SetCubemap(azer::TexturePtr& ptr) { cubemap_ = ptr;}
  private:
+  azer::TexturePtr cubemap_;
   std::unique_ptr<DispersionEffect> effect_;
-  DirLight light_;
   DISALLOW_COPY_AND_ASSIGN(MyMesh);
 };
 

@@ -34,10 +34,14 @@ void MyMesh::UpdateAll(azer::VertexData* vdata, azer::IndicesData* idata) {
 
 void MyMesh::OnUpdateScene(const azer::Camera& camera) {
   // azer::Matrix4 world = std::move(azer::Scale(0.1f, 0.1f, 0.1f));
+  float eta = 1.1f;
+  float eta_delta = -0.02f;
   azer::Matrix4 world = azer::Matrix4::kIdentity;
   effect_->SetWorld(world);
-  effect_->SetDirLight(light_);
   effect_->SetPVW(camera.GetProjViewMatrix() * world);
+  effect_->SetCubemap(cubemap_);
+  effect_->SetCameraPos(camera.position());
+  effect_->SetEta(azer::Vector4(eta, eta + eta_delta, eta + eta_delta * 2.0f, 0.0f));
 }
 
 MyMesh* Load(const ::base::FilePath::StringType& path, azer::RenderSystem* rs) {

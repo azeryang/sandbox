@@ -22,7 +22,6 @@ bool EnvMap::Skydome::Init(MeshData* data, azer::RenderSystem* rs) {
     return false;
   }
 
-  cubemap_.reset(azer::Texture::LoadShaderTexture(envmap_->path(), rs));
   return true;
 }
 
@@ -44,7 +43,7 @@ void EnvMap::Skydome::OnUpdateScene(const azer::Camera& camera) {
   azer::Matrix4 world = azer::Scale(1000.0f, 1000.0f, 1000.0f);
   // azer::Matrix4 world = azer::Matrix4::kIdentity;
   SkydomeEffect* effect = (SkydomeEffect*)effect_.get();
-  effect->SetCubemap(cubemap_);
+  effect->SetCubemap(envmap_->cubemap());
   effect->SetWorld(world);
   effect->SetPVW(camera.GetProjViewMatrix() * world);
 }
@@ -56,6 +55,7 @@ bool EnvMap::Init(azer::RenderSystem* rs) {
     return false;
   }
 
+  cubemap_.reset(azer::Texture::LoadShaderTexture(path(), rs));
   skydome_.reset(new Skydome(this));
   if (!skydome_->Init(&data, rs)) {
     return false;

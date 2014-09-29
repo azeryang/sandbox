@@ -34,7 +34,7 @@ bool MainDelegate::OnInit() {
   envmap_.reset(new EnvMap(::base::FilePath(CUBEMAP_PATH)));
   envmap_->Init(rs);
   mesh_.reset(Load(MESH_PATH, rs));
-  mesh_->SetLight(light_);
+  mesh_->SetCubemap(envmap_->cubemap());
 
   camera_.SetPosition(azer::Vector3(0.0f, 0.0f, 100.0f));
   camera_.SetLookAt(azer::Vector3(0.0f, 0.0f, 0.0f));

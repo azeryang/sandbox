@@ -27,15 +27,16 @@ class EnvMap {
     void OnUpdateScene(const azer::Camera& camera);
    private:
     azer::EffectPtr effect_;
-    azer::TexturePtr cubemap_;
-    EnvMap* envmap_;
     
+    EnvMap* envmap_;
     friend class Skydome;
     DISALLOW_COPY_AND_ASSIGN(Skydome);
   };
 
   const ::base::FilePath& path() const { return path_; }
+  azer::TexturePtr& cubemap() { return cubemap_;};
  private:
+  azer::TexturePtr cubemap_;
   ::base::FilePath path_;
   std::unique_ptr<Skydome> skydome_;
 

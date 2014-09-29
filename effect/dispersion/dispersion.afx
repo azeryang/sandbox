@@ -1,5 +1,3 @@
-#include "sandbox/base/afx/light.afxi"
-
 technique [
     name = "dispersion"
     ps_main="ps_main"
@@ -9,13 +7,16 @@ technique [
 
 [uniform_func="SetPVW"] uniform mat4 pvw;
 [uniform_func="SetWorld"] uniform mat4 world;
-[uniform_func="SetDirLight"] uniform sandbox::DirLight light;
+[uniform_func="SetCubemap"] uniform TextureCube cube;
+[uniform_func="SetCameraPos"] uniform vec3 camerapos;
+[uniform_func="SetEta"] uniform vec4 eta;
 
 exchange struct VsOutput {
   [semantic="position" system="true"]
   vec4 position;
   vec2 texcoord0;
   vec4 normal;
+  vec4 incident;
 };
 
 exchange struct VSInput {
@@ -29,14 +30,27 @@ VsOutput vs_main(VSInput input) {
   o.position = pvw * vec4(input.position, 1.0f);
   o.normal = world * vec4(input.normal, 0.0);
   o.texcoord0 = input.texcoord0;
+
+  vec4 worldpos = world * vec4(input.position, 1.0f);
+  vec4 eyepos = vec4(camerapos, 1.0f);
+  o.incident = worldpos - eyepos;
   return o;
+}
+
+vec3 refract(vec3 i, vec3 n, float eta) {
+  float cosi = dot(-i.xyz, n.xyz);
+  float cost2 = 1.0 - eta * eta * (1.0 * cosi * cosi);
+  vec3 t = eta * i + ((eta * cosi - sqrt(abs(cost2))) * n);
+  return t * vec3(cost2 > 0.0f, cost2 > 0.0f, cost2 > 0.0f);
 }
 
 [system="true" semantic="target"]
 vec4 ps_main(VsOutput o) {
-  float diffuse_factor = clamp(dot(normalize(o.normal.xyz), -light.dir.xyz),
-                               0.0, 1.0);
-  vec3 light_factor = light.ambient.xyz + light.diffuse.xyz * diffuse_factor;
-  return vec4(light_factor.xyz, 1.0);
+  vec3 normal = normalize(o.normal.xyz);
+  vec3 refract_color;
+  refract_color.r  = sampleCube(cube, refract(o.incident.xyz, normal, eta.x)).r;
+  refract_color.g  = sampleCube(cube, refract(o.incident.xyz, normal, eta.y)).g;
+  refract_color.b  = sampleCube(cube, refract(o.incident.xyz, normal, eta.z)).b;
+  return vec4(refract_color, 1.0f);
 }
 
