@@ -1,0 +1,5 @@
+efractive DispersionFor a direct link to this sample, right-click and copy the URL (shortcut) of this link icon.
+
+This example attempts to simulate the wavelength dependent nature of light refraction. In lens design this effect is also known as chromatic aberration. The code calculates three different refraction vectors for the red, green and blue wavelengths of light, each with slightly different indices of refraction. Each of these vectors is used to index into a cube map of the environment, and the resulting colors are modulated by red, green and blue and then summed to produce the rainbow effect. A reflection vector is also calculated, and used to index into the same cube map, making a total of four texture lookups. The reflection is modulated by a Fresnel approximation, which makes surfaces facing perpendicular to the viewer appear more reflective.
+
+http://developer.download.nvidia.com/SDK/9.5/Samples/samples.html
