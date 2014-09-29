@@ -1,7 +1,7 @@
 #include "sandbox/effect/dispersion/mesh.h"
 
 #define MESH_PATH FILE_PATH_LITERAL("sandbox/media/model/HateAlien/HateAlien-POSE.OBJ")
-#define EFFECT_GEN_DIR "out/dbg/gen/sandbox/basic/mesh/"
+#define EFFECT_GEN_DIR "out/dbg/gen/sandbox/effect/dispersion/"
 #define SHADER_NAME "dispersion.afx"
 
 bool MyMesh::Init(MeshData* data, azer::RenderSystem* rs) {
@@ -33,9 +33,11 @@ void MyMesh::UpdateAll(azer::VertexData* vdata, azer::IndicesData* idata) {
 }
 
 void MyMesh::OnUpdateScene(const azer::Camera& camera) {
-  effect_->SetWorld(azer::Matrix4::kIdentity);
+  // azer::Matrix4 world = std::move(azer::Scale(0.1f, 0.1f, 0.1f));
+  azer::Matrix4 world = azer::Matrix4::kIdentity;
+  effect_->SetWorld(world);
   effect_->SetDirLight(light_);
-  effect_->SetPVW(camera.GetProjViewMatrix());
+  effect_->SetPVW(camera.GetProjViewMatrix() * world);
 }
 
 MyMesh* Load(const ::base::FilePath::StringType& path, azer::RenderSystem* rs) {
@@ -45,7 +47,7 @@ MyMesh* Load(const ::base::FilePath::StringType& path, azer::RenderSystem* rs) {
   }
   
   MyMesh* mesh = new MyMesh;
-  if (!mesh->Init(&data, rs)) {
+  if (mesh->Init(&data, rs)) {
     return mesh;
   } else {
     return NULL;

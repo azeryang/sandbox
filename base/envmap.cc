@@ -6,7 +6,7 @@
 #include "skydome.afx.h"
 #define MESH_PATH AZER_LITERAL("sandbox/media/model/sphere.3ds")
 #define EFFECT_GEN_DIR "out/dbg/gen/sandbox/base/"
-#define SHADER_NAME "envmap.afx"
+#define SHADER_NAME "skydome.afx"
 
 using ::base::FilePath;
 
@@ -41,7 +41,7 @@ void EnvMap::Skydome::UpdateAll(azer::VertexData* vdata, azer::IndicesData* idat
 }
 
 void EnvMap::Skydome::OnUpdateScene(const azer::Camera& camera) {
-  azer::Matrix4 world = azer::Scale(100.0f, 100.0f, 100.0f);
+  azer::Matrix4 world = azer::Scale(300.0f, 300.0f, 300.0f);
   SkydomeEffect* effect = (SkydomeEffect*)effect_.get();
   effect->SetCubemap(cubemap_);
   effect->SetWorld(world);
@@ -52,7 +52,7 @@ void EnvMap::Skydome::OnUpdateScene(const azer::Camera& camera) {
 
 bool EnvMap::Init(azer::RenderSystem* rs) {
   MeshData data;
-  if (!LoadMeshData(path_, &data, rs)) {
+  if (!LoadMeshData(::base::FilePath(MESH_PATH), &data, rs)) {
     return false;
   }
 
@@ -62,6 +62,10 @@ bool EnvMap::Init(azer::RenderSystem* rs) {
   }
 
   return true;
+}
+
+void EnvMap::OnUpdate(const azer::Camera& camera) {
+  skydome_->OnUpdateScene(camera);
 }
 
 void EnvMap::Render(azer::Renderer* renderer) {

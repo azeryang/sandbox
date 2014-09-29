@@ -3,10 +3,13 @@
 #include "sandbox/base/base.h"
 #include "sandbox/base/afx/light.afx.h"
 #include "azer/render/render.h"
+#include "base/files/file_path.h"
 
 class EnvMap {
  public:
-  EnvMap(const ::base::FilePath& path);
+  EnvMap(const ::base::FilePath& path)
+      : path_(path) {
+  }
 
   bool Init(azer::RenderSystem* rs);
   void OnUpdate(const azer::Camera& camera);
@@ -35,7 +38,7 @@ class EnvMap {
 
   const ::base::FilePath& path() const { return path_; }
  private:
-  ::base::FilePath& path_;
+  ::base::FilePath path_;
   std::unique_ptr<Skydome> skydome_;
   DirLight light_;
 
