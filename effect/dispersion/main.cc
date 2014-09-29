@@ -2,7 +2,7 @@
 #include "base/base.h"
 
 #include "diffuse.afx.h"
-#define MESH_PATH FILE_PATH_LITERAL("sandbox/media/model/UFO-01_NoTexture.X")
+#define MESH_PATH FILE_PATH_LITERAL("sandbox/media/model/HateAlien/HateAlien-POSE.OBJ")
 #define EFFECT_GEN_DIR "out/dbg/gen/sandbox/basic/mesh/"
 #define SHADER_NAME "diffuse.afx"
 
@@ -50,12 +50,12 @@ bool MainDelegate::OnInit() {
     return false;
   }
 
-  light_.dir = azer::Vector4(0.0f, -0.3f, 0.75f, 0.0f);
+  light_.dir = azer::Vector4(0.3f, -0.3f, -0.75f, 0.0f);
   light_.diffuse = azer::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
   light_.ambient = azer::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
 
   mesh_->SetLight(light_);
-  camera_.SetPosition(azer::Vector3(0.0f, 400.0f, 400.0f));
+  camera_.SetPosition(azer::Vector3(0.0f, 10.0f, 100.0f));
   camera_.SetLookAt(azer::Vector3(0.0f, 0.0f, 0.0f));
   azer::Renderer* renderer = rs->GetDefaultRenderer();
   renderer->EnableDepthTest(true);
