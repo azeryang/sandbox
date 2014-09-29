@@ -1,9 +1,11 @@
 #include "sandbox/base/base.h"
+#include "azer/render/render.h"
 #include "base/base.h"
 
 #include "diffuse.afx.h"
-#define MESH_PATH FILE_PATH_LITERAL("sandbox/media/model/sphere.3ds")
-#define EFFECT_GEN_DIR "out/dbg/gen/sandbox/basic/mesh/"
+#define MESH_PATH AZER_LITERAL("sandbox/media/model/sphere.3ds")
+#define CUBEMAP_PATH AZER_LITERAL("sandbox/media/textures/nvlobby_new_cube_mipmap.dds")
+#define EFFECT_GEN_DIR "out/dbg/gen/sandbox/basic/cubemap/"
 #define SHADER_NAME "diffuse.afx"
 
 class MyMesh : public Mesh {
@@ -19,6 +21,7 @@ class MyMesh : public Mesh {
   void SetLight(const DirLight& l) { light_ = l;}
  private:
   std::unique_ptr<DiffuseEffect> effect_;
+  azer::TexturePtr cubemap_;
   DirLight light_;
   DISALLOW_COPY_AND_ASSIGN(MyMesh);
 };
@@ -39,7 +42,6 @@ class MainDelegate : public wxSampleApp::Delegate {
 
 bool MainDelegate::OnInit() {
   azer::RenderSystem* rs = azer::RenderSystem::Current();
-
   MeshData data;
   if (!LoadMeshData(MESH_PATH, &data, rs)) {
     return false;
@@ -91,6 +93,7 @@ bool MyMesh::Init(MeshData* data, azer::RenderSystem* rs) {
     return false;
   }
 
+  cubemap_.reset(azer::Texture::LoadShaderTexture(CUBEMAP_PATH, rs));
   return true;
 }
 
@@ -110,6 +113,7 @@ void MyMesh::UpdateAll(azer::VertexData* vdata, azer::IndicesData* idata) {
 
 void MyMesh::OnUpdateScene(const azer::Camera& camera) {
   azer::Matrix4 world = azer::Scale(100.0f, 100.0f, 100.0f);
+  effect_->SetCubemap(cubemap_);
   effect_->SetWorld(world);
   effect_->SetDirLight(light_);
   effect_->SetPVW(camera.GetProjViewMatrix() * world);
