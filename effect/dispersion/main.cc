@@ -4,6 +4,7 @@
 
 #include "diffuse.afx.h"
 
+#define MESH_PATH AZER_LITERAL("sandbox/media/model/HateAlien/HateAlien-POSE.OBJ")
 #define EFFECT_GEN_DIR "out/dbg/gen/sandbox/basic/mesh/"
 #define SHADER_NAME "diffuse.afx"
 
@@ -23,16 +24,7 @@ class MainDelegate : public wxSampleApp::Delegate {
 
 bool MainDelegate::OnInit() {
   azer::RenderSystem* rs = azer::RenderSystem::Current();
-
-  MeshData data;
-  if (!LoadMeshData(MESH_PATH, &data, rs)) {
-    return false;
-  }
-  
-  mesh_.reset(new MyMesh);
-  if (!mesh_->Init(&data, rs)) {
-    return false;
-  }
+  mesh_.reset(Load(MESH_PATH, rs));
 
   light_.dir = azer::Vector4(0.3f, -0.3f, -0.75f, 0.0f);
   light_.diffuse = azer::Vector4(1.0f, 1.0f, 1.0f, 1.0f);

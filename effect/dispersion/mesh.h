@@ -1,5 +1,6 @@
 #pragma once
 
+#include "sandbox/base/base.h"
 #include "dispersion.afx.h"
 
 class MyMesh : public Mesh {
@@ -14,7 +15,9 @@ class MyMesh : public Mesh {
   void OnUpdateScene(const azer::Camera& camera);
   void SetLight(const DirLight& l) { light_ = l;}
  private:
-  std::unique_ptr<DiffuseEffect> effect_;
+  std::unique_ptr<DispersionEffect> effect_;
   DirLight light_;
   DISALLOW_COPY_AND_ASSIGN(MyMesh);
 };
+
+MyMesh* Load(const ::base::FilePath::StringType& path, azer::RenderSystem* rs);

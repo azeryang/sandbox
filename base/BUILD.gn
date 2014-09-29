@@ -1,3 +1,4 @@
+import("//build/templates/afx.gni")
 
 static_library("sandbox_loader") {
   sources = ["mesh.cc", "mesh.h"]
@@ -21,14 +22,23 @@ static_library("sandbox_wxapp") {
   ]
 }
 
+afx("sandbox_base_skydome_effect") {
+  source = "skydome.afx"
+  filename = "skydome"
+}
+
 static_library("sandbox_base") {
   sources = [
     "dummy.cc",
     "camera_control.cc",
     "camera_control.h",
+    "envmap.cc",
+    "envmap.h",
   ]
   deps = [
     ":sandbox_loader",
     ":sandbox_wxapp",
+    ":sandbox_base_skydome_effect",
+    "//third_party/wxwidget:wxwidget"
   ]
 }
