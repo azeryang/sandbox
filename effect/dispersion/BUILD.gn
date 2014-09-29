@@ -4,12 +4,23 @@ afx("sandbox_effect_dispersion_effect") {
   source = "diffuse.afx"
   filename = "diffuse"
 }
+
+afx("sandbox_effect_dispersion_effect2") {
+  source = "dispersion.afx"
+  filename = "dispersion"
+}
+
 executable("sandbox_effect_dispersion") {
-  sources = ["main.cc"]
+  sources = [
+    "main.cc"
+    "mesh.cc",
+    "mesh.h",
+  ]
   deps = [
     "//third_party/wxwidget:wxwidget"
     "//sandbox/base:sandbox_base",
     "//base:appinit",
     ":sandbox_effect_dispersion_effect",
+    ":sandbox_effect_dispersion_effect2",
   ]
 }
