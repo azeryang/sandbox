@@ -1,0 +1,9 @@
+
+group("sandbox_basic") {
+  deps = [
+    "sampleapp:sandbox_sampleapp",
+    "triangle:sandbox_basic_triangle",
+    "mesh:sandbox_basic_mesh",
+    "cubemap:sandbox_basic_cubemap",
+  ]
+}
