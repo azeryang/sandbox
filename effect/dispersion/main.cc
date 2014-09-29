@@ -27,18 +27,18 @@ class MainDelegate : public wxSampleApp::Delegate {
 
 bool MainDelegate::OnInit() {
   azer::RenderSystem* rs = azer::RenderSystem::Current();
-  envmap_.reset(new EnvMap(::base::FilePath(CUBEMAP_PATH)));
-  envmap_->Init(rs);
-  envmap_->SetLight(light_);
-  mesh_.reset(Load(MESH_PATH, rs));
-  mesh_->SetLight(light_);
-
   light_.dir = azer::Vector4(0.3f, -0.3f, -0.75f, 0.0f);
   light_.diffuse = azer::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
   light_.ambient = azer::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
 
-  camera_.SetPosition(azer::Vector3(0.0f, 10.0f, 100.0f));
+  envmap_.reset(new EnvMap(::base::FilePath(CUBEMAP_PATH)));
+  envmap_->Init(rs);
+  mesh_.reset(Load(MESH_PATH, rs));
+  mesh_->SetLight(light_);
+
+  camera_.SetPosition(azer::Vector3(0.0f, 0.0f, 100.0f));
   camera_.SetLookAt(azer::Vector3(0.0f, 0.0f, 0.0f));
+  camera_.frustrum().set_far(10000.0f);
   azer::Renderer* renderer = rs->GetDefaultRenderer();
   renderer->EnableDepthTest(true);
   return true; 

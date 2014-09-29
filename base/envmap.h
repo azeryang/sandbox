@@ -15,8 +15,6 @@ class EnvMap {
   void OnUpdate(const azer::Camera& camera);
   void Render(azer::Renderer* renderer);
 
-  void SetLight(const DirLight& l) { light_ = l;}
-
   class Skydome : public Mesh {
    public:
     Skydome(EnvMap* env) : envmap_(env) {}
@@ -40,7 +38,6 @@ class EnvMap {
  private:
   ::base::FilePath path_;
   std::unique_ptr<Skydome> skydome_;
-  DirLight light_;
 
   friend class Skydome;
   DISALLOW_COPY_AND_ASSIGN(EnvMap);

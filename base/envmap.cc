@@ -41,11 +41,11 @@ void EnvMap::Skydome::UpdateAll(azer::VertexData* vdata, azer::IndicesData* idat
 }
 
 void EnvMap::Skydome::OnUpdateScene(const azer::Camera& camera) {
-  azer::Matrix4 world = azer::Scale(300.0f, 300.0f, 300.0f);
+  azer::Matrix4 world = azer::Scale(1000.0f, 1000.0f, 1000.0f);
+  // azer::Matrix4 world = azer::Matrix4::kIdentity;
   SkydomeEffect* effect = (SkydomeEffect*)effect_.get();
   effect->SetCubemap(cubemap_);
   effect->SetWorld(world);
-  effect->SetDirLight(envmap_->light_);
   effect->SetPVW(camera.GetProjViewMatrix() * world);
 }
 
