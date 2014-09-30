@@ -25,7 +25,7 @@ void MyMesh::UseEffect(const Group& group, azer::Renderer* renderer) {
 void MyMesh::UpdateVertex(void* dest, const MeshData::Vertex& vertex) {
   DispersionEffect::Vertex* v = (DispersionEffect::Vertex*)dest;
   v->position = azer::Vector3(vertex.position);
-  v->texcoord0= vertex.tex0;
+  v->texcoord0 = vertex.tex0;
   v->normal = azer::Vector3(vertex.normal);
 }
 

@@ -8,7 +8,8 @@ wxSampleFrame::wxSampleFrame(wxSampleApp::Delegate* delegate, const wxString& ti
     , render_system_(NULL)
     , prev_time_(0)
     , prev_delta_(0)
-    , host_(azer::WindowHost::Options()) {
+    , host_(azer::WindowHost::Options())
+    , frame_cnt_(0) {
 }
 
 bool wxSampleFrame::Init() {
@@ -36,7 +37,10 @@ bool wxSampleFrame::CreateRender() {
     return false;
   }
 
-  delegate_->OnUpdateScene(0.0, 0.0f);
+  prev_time_ = 0.0f;
+  prev_delta_ = 0.0f;
+  delegate_->OnUpdateScene(prev_time_, prev_delta_);
+  prev_frame_ = ::base::TimeTicks::HighResNow();
   render_loop_on_ = true;
   return true;
 }
@@ -59,6 +63,7 @@ void wxSampleFrame::onIdle(wxIdleEvent& evt) {
     prev_delta_ = (float)delta.InSecondsF();
     delegate_->OnUpdateScene(prev_time_, prev_delta_);
     prev_frame_ = now;
+    frame_cnt_++;
   }
 }
 

@@ -34,7 +34,7 @@ bool MainDelegate::OnInit() {
 
   envmap_.reset(new EnvMap(::base::FilePath(CUBEMAP_PATH)));
   envmap_->Init(rs);
-  cubemap_.reset(azer::Texture::LoadShaderTexture(CUBEMAP_PATH, rs));
+  // cubemap_.reset(azer::Texture::LoadShaderTexture(CUBEMAP_PATH, rs));
   mesh_.reset(Load(MESH_PATH, rs));
   // mesh_->SetCubemap(cubemap_);
   mesh_->SetCubemap(envmap_->cubemap());
@@ -70,6 +70,11 @@ void MainDelegate::OnRenderScene(double time, float delta_time) {
 int main(int argc, char* argv[]) {
   ::base::InitApp(&argc, &argv, "");
   MainDelegate delegate;
+  /*
+  SampleApp app(&delegate);
+  app.Init();
+  app.MainLoop();
+  */
   wxSampleApp app(&delegate);
   wxSampleApp::MainLoop(argc, argv, &app);
   return 0;

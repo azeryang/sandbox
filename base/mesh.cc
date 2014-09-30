@@ -84,7 +84,7 @@ bool Mesh::InitPhyBuf(const MeshData* mesh, azer::VertexDescPtr& desc,
 
     azer::IndicesData idata(dgroup.indices.size(), azer::IndicesData::kUint32);
     memcpy(idata.pointer(), &(dgroup.indices[0]),
-           sizeof(int32) * dgroup.indices.size());
+           sizeof(uint32) * dgroup.indices.size());
 
     Group group;
     group.vb.reset(rs->CreateVertexBuffer(azer::VertexBuffer::Options(), &vdata));

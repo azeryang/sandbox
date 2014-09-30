@@ -46,6 +46,7 @@ class wxSampleFrame: public wxFrame {
   double prev_time_;
   float prev_delta_;
   azer::WindowHost host_;
+  int64 frame_cnt_;
   wxDECLARE_EVENT_TABLE();
 };
 
