@@ -22,6 +22,7 @@ class MainDelegate : public wxSampleApp::Delegate {
   DirLight light_;
   std::unique_ptr<MyMesh> mesh_;
   std::unique_ptr<EnvMap> envmap_;
+  azer::TexturePtr cubemap_;
   DISALLOW_COPY_AND_ASSIGN(MainDelegate);
 };
 
@@ -33,7 +34,9 @@ bool MainDelegate::OnInit() {
 
   envmap_.reset(new EnvMap(::base::FilePath(CUBEMAP_PATH)));
   envmap_->Init(rs);
+  cubemap_.reset(azer::Texture::LoadShaderTexture(CUBEMAP_PATH, rs));
   mesh_.reset(Load(MESH_PATH, rs));
+  // mesh_->SetCubemap(cubemap_);
   mesh_->SetCubemap(envmap_->cubemap());
 
   camera_.SetPosition(azer::Vector3(0.0f, 0.0f, 100.0f));

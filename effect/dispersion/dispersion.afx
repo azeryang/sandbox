@@ -9,7 +9,8 @@ technique [
 [uniform_func="SetWorld"] uniform mat4 world;
 [uniform_func="SetCubemap"] uniform TextureCube cube;
 [uniform_func="SetCameraPos"] uniform vec3 camerapos;
-[uniform_func="SetEta"] uniform vec4 eta;
+[uniform_func="SetFresnelParam"] uniform vec3 fresnel_param;
+[uniform_func="SetEta"] uniform vec3 eta;
 
 exchange struct VsOutput {
   [semantic="position" system="true"]
@@ -37,6 +38,14 @@ VsOutput vs_main(VSInput input) {
   return o;
 }
 
+float fast_fresnel(vec3 I, vec3 N, vec3 fresnelValues) {
+  float power = fresnelValues.x;
+  float scale = fresnelValues.y;
+  float bias = fresnelValues.z;
+
+  return bias + pow(1.0 - dot(I, N), power) * scale;
+}
+
 vec3 refract(vec3 i, vec3 n, float eta) {
   float cosi = dot(-i.xyz, n.xyz);
   float cost2 = 1.0 - eta * eta * (1.0 * cosi * cosi);
@@ -47,10 +56,12 @@ vec3 refract(vec3 i, vec3 n, float eta) {
 [system="true" semantic="target"]
 vec4 ps_main(VsOutput o) {
   vec3 normal = normalize(o.normal.xyz);
-  vec3 refract_color;
-  refract_color.r  = sampleCube(cube, refract(o.incident.xyz, normal, eta.x)).r;
-  refract_color.g  = sampleCube(cube, refract(o.incident.xyz, normal, eta.y)).g;
-  refract_color.b  = sampleCube(cube, refract(o.incident.xyz, normal, eta.z)).b;
-  return vec4(refract_color, 1.0f);
+  vec3 incident = normalize(o.incident.xyz);
+  vec3 refract_color = sampleCube(cube, incident).rgb;
+  vec3 reflect_color = sampleCube(cube, reflect(incident, normal)).rgb;
+  float factor = dot(-incident.xyz, normal);
+  float fresnel = clamp(fast_fresnel(-incident, normal, fresnel_param), 0.0f, 1.0f);
+  vec3 color = lerp(refract_color, reflect_color, fresnel);
+  return vec4(clamp(color * factor * 2.0f, 0.0f, 1.0f), 1.0f);
 }
 

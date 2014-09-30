@@ -41,7 +41,8 @@ void MyMesh::OnUpdateScene(const azer::Camera& camera) {
   effect_->SetPVW(camera.GetProjViewMatrix() * world);
   effect_->SetCubemap(cubemap_);
   effect_->SetCameraPos(camera.position());
-  effect_->SetEta(azer::Vector4(eta, eta + eta_delta, eta + eta_delta * 2.0f, 0.0f));
+  effect_->SetFresnelParam(azer::Vector3(2.0f, 2.0f, 0.1f));
+  // effect_->SetEta(azer::Vector3(eta, eta + eta_delta, eta + eta_delta * 2.0f));
 }
 
 MyMesh* Load(const ::base::FilePath::StringType& path, azer::RenderSystem* rs) {
