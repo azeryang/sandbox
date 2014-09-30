@@ -1,0 +1,15 @@
+import("//build/templates/afx.gni")
+
+afx("sandbox_antialiasing_csaa_effect") {
+  source = "diffuse.afx"
+  filename = "diffuse"
+}
+executable("sandbox_antialiasing_csaa") {
+  sources = ["main.cc"]
+  deps = [
+    "//third_party/wxwidget:wxwidget"
+    "//sandbox/base:sandbox_base",
+    "//base:appinit",
+    ":sandbox_antialiasing_csaa_effect",
+  ]
+}
