@@ -20,6 +20,7 @@ class MyMesh : public Mesh {
  private:
   std::unique_ptr<DiffuseEffect> effect_;
   DirLight light_;
+  Material mtrl_;
   DISALLOW_COPY_AND_ASSIGN(MyMesh);
 };
 
@@ -91,6 +92,10 @@ bool MyMesh::Init(MeshData* data, azer::RenderSystem* rs) {
     return false;
   }
 
+  mtrl_.diffuse_color = azer::Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+  mtrl_.specular_color = azer::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+  mtrl_.specular_power = 32.0f;
+  mtrl_.specular_intensity = 1.0f;
   return true;
 }
 
@@ -111,7 +116,9 @@ void MyMesh::UpdateAll(azer::VertexData* vdata, azer::IndicesData* idata) {
 void MyMesh::OnUpdateScene(const azer::Camera& camera) {
   effect_->SetWorld(azer::Matrix4::kIdentity);
   effect_->SetDirLight(light_);
+  effect_->SetMaterial(mtrl_);
   effect_->SetPVW(camera.GetProjViewMatrix());
+  effect_->SetCameraPos(azer::Vector4(camera.position(), 1.0f));
 }
 
 int main(int argc, char* argv[]) {
