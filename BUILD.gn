@@ -3,5 +3,6 @@ group("sandbox") {
   deps = [
     "basic:sandbox_basic",
     "effect:sandbox_effect",
+    "antialiasing:sandbox_antialiasing",
   ]
 }

@@ -1,0 +1,15 @@
+import("//build/templates/afx.gni")
+
+afx("sandbox_effect_bump_earth_effect") {
+  source = "diffuse.afx"
+  filename = "diffuse"
+}
+executable("sandbox_effect_bump_earth") {
+  sources = ["main.cc"]
+  deps = [
+    "//third_party/wxwidget:wxwidget"
+    "//sandbox/base:sandbox_base",
+    "//base:appinit",
+    ":sandbox_effect_bump_earth_effect",
+  ]
+}

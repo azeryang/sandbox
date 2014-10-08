@@ -2,5 +2,6 @@
 group("sandbox_effect") {
   deps = [
     "dispersion:sandbox_effect_dispersion",
+    "bump_earth:sandbox_effect_bump_earth",
   ]
 }
