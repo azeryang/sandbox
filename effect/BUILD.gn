@@ -1,6 +1,7 @@
 
 group("sandbox_effect") {
   deps = [
+    "simple_light:sandbox_effect_simple_light",
     "dispersion:sandbox_effect_dispersion",
     "bump_earth:sandbox_effect_bump_earth",
   ]

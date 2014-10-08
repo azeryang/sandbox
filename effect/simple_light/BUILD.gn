@@ -1,0 +1,15 @@
+import("//build/templates/afx.gni")
+
+afx("sandbox_effect_simple_light_effect") {
+  source = "diffuse.afx"
+  filename = "diffuse"
+}
+executable("sandbox_effect_simple_light") {
+  sources = ["main.cc"]
+  deps = [
+    "//third_party/wxwidget:wxwidget"
+    "//sandbox/base:sandbox_base",
+    "//base:appinit",
+    ":sandbox_effect_simple_light_effect",
+  ]
+}
