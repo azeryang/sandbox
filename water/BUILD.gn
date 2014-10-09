@@ -1,0 +1,6 @@
+
+group("sandbox_water") {
+  deps = [
+    "vertex_fetch_water:sandbox_vertex_fetch_water",
+  ]
+}

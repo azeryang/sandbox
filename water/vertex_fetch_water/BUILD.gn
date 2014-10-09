@@ -1,0 +1,24 @@
+import("//build/templates/afx.gni")
+
+group("sandbox_vertex_fetch_water") {
+  deps = [
+    ":sandbox_vertex_fetch_water_simulation",
+  ]
+}
+
+afx("sandbox_vertex_fetch_water_simulation_effect") {
+  source = "water_simulation.afx"
+  filename = "water_simulation"
+}
+executable("sandbox_vertex_fetch_water_simulation") {
+  sources = ["simulation_main.cc"
+             "simulation.cc",
+             "simulation.h",
+  ]
+  deps = [
+    "//third_party/wxwidget:wxwidget"
+    "//sandbox/base:sandbox_base",
+    "//base:appinit",
+    ":sandbox_vertex_fetch_water_simulation_effect",
+  ]
+}
