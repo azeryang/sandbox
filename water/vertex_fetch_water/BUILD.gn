@@ -10,6 +10,11 @@ afx("sandbox_vertex_fetch_water_simulation_effect") {
   source = "water_simulation.afx"
   filename = "water_simulation"
 }
+
+afx("sandbox_vertex_fetch_water_simulation_effect2") {
+  source = "quad.afx"
+  filename = "quad"
+}
 executable("sandbox_vertex_fetch_water_simulation") {
   sources = ["simulation_main.cc"
              "simulation.cc",
