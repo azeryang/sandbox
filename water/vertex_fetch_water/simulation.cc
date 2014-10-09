@@ -106,7 +106,7 @@ void WaterSimulation::RenderPerturb(azer::Renderer* renderer,
 
   WaterPerturbEffect* effect = (WaterPerturbEffect*)perturb_effect_.get();
   effect->SetPerturbTex(brush_tex_);
-  // effect->SetDeltaTime(0.3f);
+  effect->SetDeltaTime(0.3f);
   effect->SetPosition(azer::Vector4(x, y, 0.0f, 1.0f));
   effect->SetDeltaPos(azer::Vector4(u[0], v[0], u[1], v[1]));
   effect->Use(renderer);
@@ -114,7 +114,6 @@ void WaterSimulation::RenderPerturb(azer::Renderer* renderer,
 }
 
 void WaterSimulation::CalcSimulation(double time, float delta) {
-  azer::Vector4 color(0.0f, 0.0f, 0.0f, 0.0f);
   azer::Renderer* renderer = RenderTarget();
   renderer->EnableDepthTest(false);
   WaterSimulationEffect* effect = (WaterSimulationEffect*)effect_.get();
@@ -124,7 +123,7 @@ void WaterSimulation::CalcSimulation(double time, float delta) {
   effect->SetWaterSize(azer::Vector4(100.0f, 0.0f, 100.0f, 0.0f));
   effect->SetPositionWeight(azer::Vector4(1.99f, 0.99f, 0.0f, 0.0f));
   effect->SetWaveSpeed(azer::Vector4(10.0f, 10.0f, 0.0f, 0.0f));
-  effect->SetSampleUnit(azer::Vector2(0.001, 0.001));
+  effect->SetSampleUnit(azer::Vector2(1.0f / 800.0f, 1.0f / 600.0f));
   effect->SetDeltaTime(azer::Vector4(0.005f, 0.005f, 0.0f, 0.0f));
   effect->Use(renderer);
   renderer->DrawIndex(vb_.get(), ib_.get(), azer::kTriangleList);
@@ -150,5 +149,6 @@ azer::TexturePtr& WaterSimulation::rttex() {
 
 azer::Renderer* WaterSimulation::RenderTarget() {
   int index = (index_ + 2) % 3;
+  azer::Vector4 color(0.0f, 0.0f, 0.0f, 0.0f);
   return target_[index]->Begin(color);
 }

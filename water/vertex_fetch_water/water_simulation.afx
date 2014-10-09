@@ -53,6 +53,7 @@ vec4 ps_main(VsOutput o) {
   vec3 dydz = vec3(0.0f, h_x1y2 - h_x1y1, -water_size.z);
   vec3 normal = normalize(cross(dydx, dydz));
 
-  return vec4(new_height, normal);
+  vec4 ret = vec4(new_height, normal);
+  return sample2D(currtex, o.texcoord0);
 }
 
