@@ -5,24 +5,39 @@
 #include "azer/render/render.h"
 
 #include "water_simulation.afx.h"
+#include "water_perturb.afx.h"
 #include "quad.afx.h"
 #define EFFECT_GEN_DIR "out/dbg/gen/sandbox/water/vertex_fetch_water/"
 #define SHADER_NAME "water_simulation.afx"
 #define SHADER2_NAME "quad.afx"
+#define PERTURB_NAME "water_perturb.afx"
 
 #define DAMPENING_TERTEX  FILE_PATH_LITERAL("sandbox/media/textures/dampening.tga")
+#define BRUSH_TERTEX  FILE_PATH_LITERAL("sandbox/media/textures/brush.tga")
 
 bool WaterSimulation::Init(azer::RenderSystem* rs) {
   if (!InitVertex(rs)) {
     return false;
   }
 
-  azer::ShaderArray shaders;
-  CHECK(azer::LoadVertexShader(EFFECT_GEN_DIR SHADER2_NAME ".vs", &shaders));
-  CHECK(azer::LoadPixelShader(EFFECT_GEN_DIR SHADER2_NAME ".ps", &shaders));
-  QuadEffect* effect = new QuadEffect(shaders.GetShaderVec(), rs);
-  quad_effect_.reset(effect);
+  {
+    azer::ShaderArray shaders;
+    CHECK(azer::LoadVertexShader(EFFECT_GEN_DIR SHADER2_NAME ".vs", &shaders));
+    CHECK(azer::LoadPixelShader(EFFECT_GEN_DIR SHADER2_NAME ".ps", &shaders));
+    QuadEffect* effect = new QuadEffect(shaders.GetShaderVec(), rs);
+    quad_effect_.reset(effect);
+  }
+
+  {
+    azer::ShaderArray shaders;
+    CHECK(azer::LoadVertexShader(EFFECT_GEN_DIR PERTURB_NAME ".vs", &shaders));
+    CHECK(azer::LoadPixelShader(EFFECT_GEN_DIR PERTURB_NAME ".ps", &shaders));
+    WaterPerturbEffect* effect = new WaterPerturbEffect(shaders.GetShaderVec(), rs);
+    perturb_effect_.reset(effect);
+  }
+  
   dampening_tex_.reset(azer::Texture::LoadShaderTexture(DAMPENING_TERTEX, rs));
+  brush_tex_.reset(azer::Texture::LoadShaderTexture(BRUSH_TERTEX, rs));
 
   for (uint32 i = 0; i < arraysize(target_); ++i) {
     target_[i].reset(new azer::TexRenderTarget(800, 600));
@@ -65,26 +80,54 @@ bool WaterSimulation::InitVertex(azer::RenderSystem* rs) {
   return true;
 }
 
-void WaterSimulation::Render(azer::Renderer* renderer) {
+void WaterSimulation::Render(azer::Renderer* renderer,
+                             double time, float delta) {
+  CalcSimulation(time, delta);
   renderer->Use();
   quad_effect_->Use(renderer);
   renderer->DrawIndex(vb_.get(), ib_.get(), azer::kTriangleList);
 }
 
-void WaterSimulation::CalcSimulation() {
+void WaterSimulation::RenderPerturb(azer::Renderer* renderer,
+                                    double time, float delta) {
+  // draw perturb
+  float waketime = time - 0.55f;
+  float x = 0.5f * sin(waketime);
+  float y = -0.5f * cos(waketime);
+  float u[2], v[2];
+  v[0] = -0.1f * cos(waketime);
+  v[1] = -0.1f * sin(waketime);
+  u[0] = -0.1f * -sin(waketime);
+  u[1] = -0.1f * cos(waketime);
+
+  WaterPerturbEffect* effect = (WaterPerturbEffect*)perturb_effect_.get();
+  effect->SetPerturbTex(brush_tex_);
+  effect->SetDeltaTime(0.3f);
+  effect->SetPosition(azer::Vector4(x, y, 0.0f, 1.0f));
+  effect->SetDeltaPos(azer::Vector4(u[0], v[0], u[1], v[1]));
+  effect->Use(renderer);
+  renderer->DrawIndex(vb_.get(), ib_.get(), azer::kTriangleList);
+}
+
+void WaterSimulation::CalcSimulation(double time, float delta) {
   azer::Vector4 color(0.0f, 0.0f, 0.0f, 0.0f);
   azer::TexRenderTargetPtr prev = target_[index_ % 3];
   azer::TexRenderTargetPtr curr = target_[(index_ + 1) % 3];
   azer::Renderer* renderer = target_[(index_ + 2) % 3]->Begin(color);
+  renderer->EnableDepthTest(false);
   WaterSimulationEffect* effect = (WaterSimulationEffect*)effect_.get();
   effect->SetPrevHeight(prev->GetRTTex());
   effect->SetCurrHeight(curr->GetRTTex());
   effect->SetDampenTex(dampening_tex_);
   effect->SetWaterSize(azer::Vector4(100.0f, 0.0f, 100.0f, 0.0f));
   effect->SetPositionWeight(azer::Vector4(1.99f, 0.99f, 0.0f, 0.0f));
-  effect->SetWaveSpeed(azer::Vector4(0.0f, 10.0f, 0.0f, 0.0f));
+  effect->SetWaveSpeed(azer::Vector4(10.0f, 10.0f, 0.0f, 0.0f));
   effect->SetSampleUnit(azer::Vector2(1.0f / 800.0f, 1.0f / 600.0f));
+  effect->SetDeltaTime(azer::Vector4(0.01f, 0.01f, 0.0f, 0.0f));
   effect->Use(renderer);
   renderer->DrawIndex(vb_.get(), ib_.get(), azer::kTriangleList);
+
+  RenderPerturb(renderer, time, delta);
   index_++;
+  renderer->EnableDepthTest(true);
 }

@@ -33,7 +33,7 @@ void MainDelegate::OnRenderScene(double time, float delta_time) {
   renderer->ClearDepthAndStencil();
   renderer->SetCullingMode(azer::kCullNone);
 
-  simulation_.Render(renderer);
+  simulation_.Render(renderer, time, delta_time);
 }
 
 int main(int argc, char* argv[]) {

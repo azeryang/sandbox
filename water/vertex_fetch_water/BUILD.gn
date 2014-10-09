@@ -12,6 +12,11 @@ afx("sandbox_vertex_fetch_water_simulation_effect") {
 }
 
 afx("sandbox_vertex_fetch_water_simulation_effect2") {
+  source = "water_perturb.afx"
+  filename = "water_perturb"
+}
+
+afx("sandbox_vertex_fetch_water_simulation_effect3") {
   source = "quad.afx"
   filename = "quad"
 }
@@ -26,5 +31,6 @@ executable("sandbox_vertex_fetch_water_simulation") {
     "//base:appinit",
     ":sandbox_vertex_fetch_water_simulation_effect",
     ":sandbox_vertex_fetch_water_simulation_effect2",
+    ":sandbox_vertex_fetch_water_simulation_effect3",
   ]
 }
