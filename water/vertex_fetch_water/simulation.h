@@ -13,6 +13,11 @@ class WaterSimulation {
   void CalcSimulation(double time, float delta);
   void RenderPerturb(azer::Renderer* renderer, double time, float delta);
   bool InitVertex(azer::RenderSystem* rs);
+
+  azer::TexturePtr& prev_height();
+  azer::TexturePtr& curr_height();
+  azer::TexturePtr& rttex();
+  azer::Renderer* RenderTarget();
   int index_;
   azer::TexRenderTargetPtr target_[3];
   azer::VertexBufferPtr vb_;

@@ -6,6 +6,8 @@ technique [
     class_name="QuadEffect"
            ];
 
+[uniform_func="SetTexture"] uniform Texture2D tex;
+
 exchange struct VsOutput {
   [semantic="position" system="true"]
   vec4 position;
@@ -26,6 +28,6 @@ VsOutput vs_main(VSInput input) {
 
 [system="true" semantic="target"]
 vec4 ps_main(VsOutput o) {
-  return vec4(1.0f, 0.0f, 0.0f, 1.0f);
+  return vec4(sample2D(tex, o.texcoord0).xxx, 1.0f);
 }
 
