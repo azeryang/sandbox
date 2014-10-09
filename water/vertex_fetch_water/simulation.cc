@@ -1,5 +1,8 @@
+#include "sandbox/water/vertex_fetch_water/simulation.h"
+
 #include "sandbox/base/base.h"
 #include "base/base.h"
+#include "azer/render/render.h"
 
 #include "water_simulation.afx.h"
 #define EFFECT_GEN_DIR "out/dbg/gen/sandbox/water/vertex_fetch_water/"
@@ -23,14 +26,14 @@ bool WaterSimulation::InitVertex(azer::RenderSystem* rs) {
   WaterSimulationEffect::Vertex v[] = {
     WaterSimulationEffect::Vertex(azer::Vector4(-1.0f,  1.0f, 0.0f, 1.0f ),
                                   azer::Vector2( 0.0f,  0.0f)),
-    WaterSimulationEffect::Vertex(azer::Vector4( 1.0f,  1.0f, 0.5f, 1.0f ),
+    WaterSimulationEffect::Vertex(azer::Vector4( 1.0f,  1.0f, 0.0f, 1.0f ),
                                   azer::Vector2( 0.0f,  1.0f)),
     WaterSimulationEffect::Vertex(azer::Vector4(-1.0f, -1.0f, 0.0f, 1.0f ),
                                   azer::Vector2( 1.0f,  0.0f)),
-    WaterSimulationEffect::Vertex(azer::Vector4( 1.0f,  1.0f, 0.0f, 1.0f ),
+    WaterSimulationEffect::Vertex(azer::Vector4( 1.0f, -1.0f, 0.0f, 1.0f ),
                                   azer::Vector2( 1.0f,  1.0f)),
   };
-  azer::VertexData vdata(effect_->GetVertexDesc(), ARRAYSIZE(v));
+  azer::VertexData vdata(effect->GetVertexDesc(), ARRAYSIZE(v));
   memcpy(vdata.pointer(), (uint8*)v, sizeof(v));
   vb_.reset(rs->CreateVertexBuffer(azer::VertexBuffer::Options(), &vdata));
 
@@ -42,8 +45,8 @@ bool WaterSimulation::InitVertex(azer::RenderSystem* rs) {
   return true;
 }
 
-void WaterSimulationEffect::Render(azer::Renderer* renderer) {
+void WaterSimulation::Render(azer::Renderer* renderer) {
   WaterSimulationEffect* effect = (WaterSimulationEffect*)effect_.get();
   effect->Use(renderer);
-  renderer->DrawIndex(vb_.get(), ib_.get(), azer::TriangleList);
+renderer->DrawIndex(vb_.get(), ib_.get(), azer::kTriangleList);
 }
