@@ -10,6 +10,8 @@
 #define SHADER_NAME "water_simulation.afx"
 #define SHADER2_NAME "quad.afx"
 
+#define DAMPENING_TERTEX  FILE_PATH_LITERAL("sandbox/media/textures/dampening.tga")
+
 bool WaterSimulation::Init(azer::RenderSystem* rs) {
   if (!InitVertex(rs)) {
     return false;
@@ -20,6 +22,7 @@ bool WaterSimulation::Init(azer::RenderSystem* rs) {
   CHECK(azer::LoadPixelShader(EFFECT_GEN_DIR SHADER2_NAME ".ps", &shaders));
   QuadEffect* effect = new QuadEffect(shaders.GetShaderVec(), rs);
   quad_effect_.reset(effect);
+  dampening_tex_.reset(azer::Texture::LoadShaderTexture(DAMPENING_TERTEX, rs));
 
   for (uint32 i = 0; i < arraysize(target_); ++i) {
     target_[i].reset(new azer::TexRenderTarget(800, 600));
@@ -70,10 +73,18 @@ void WaterSimulation::Render(azer::Renderer* renderer) {
 
 void WaterSimulation::CalcSimulation() {
   azer::Vector4 color(0.0f, 0.0f, 0.0f, 0.0f);
-  azer::TexRenderTargetPtr prev = target_[index];
-  azer::Renderer* renderer = target_[++index_]->Begin(color);
+  azer::TexRenderTargetPtr prev = target_[index_ % 3];
+  azer::TexRenderTargetPtr curr = target_[(index_ + 1) % 3];
+  azer::Renderer* renderer = target_[(index_ + 2) % 3]->Begin(color);
   WaterSimulationEffect* effect = (WaterSimulationEffect*)effect_.get();
-  effect->SetPrev(prev->GetRTTex());
+  effect->SetPrevHeight(prev->GetRTTex());
+  effect->SetCurrHeight(curr->GetRTTex());
+  effect->SetDampenTex(dampening_tex_);
+  effect->SetWaterSize(azer::Vector4(100.0f, 0.0f, 100.0f, 0.0f));
+  effect->SetPositionWeight(azer::Vector4(1.99f, 0.99f, 0.0f, 0.0f));
+  effect->SetWaveSpeed(azer::Vector4(0.0f, 10.0f, 0.0f, 0.0f));
+  effect->SetSampleUnit(azer::Vector2(1.0f / 800.0f, 1.0f / 600.0f));
   effect->Use(renderer);
   renderer->DrawIndex(vb_.get(), ib_.get(), azer::kTriangleList);
+  index_++;
 }

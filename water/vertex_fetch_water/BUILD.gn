@@ -25,5 +25,6 @@ executable("sandbox_vertex_fetch_water_simulation") {
     "//sandbox/base:sandbox_base",
     "//base:appinit",
     ":sandbox_vertex_fetch_water_simulation_effect",
+    ":sandbox_vertex_fetch_water_simulation_effect2",
   ]
 }

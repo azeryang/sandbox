@@ -13,10 +13,11 @@ class WaterSimulation {
   void CalcSimulation();
   bool InitVertex(azer::RenderSystem* rs);
   int index_;
-  azer::TexRenderTargetPtr target_[2];
+  azer::TexRenderTargetPtr target_[3];
   azer::VertexBufferPtr vb_;
   azer::IndicesBufferPtr ib_;
   azer::EffectPtr effect_;
   azer::EffectPtr quad_effect_;
+  azer::TexturePtr dampening_tex_;
   DISALLOW_COPY_AND_ASSIGN(WaterSimulation);
 };

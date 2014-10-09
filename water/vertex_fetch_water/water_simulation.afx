@@ -6,10 +6,12 @@ technique [
     class_name="WaterSimulationEffect"
            ];
 
-[uniform_func="SetPrev"] uniform Texture2D prevtex;
-[uniform_func="SetDampen"] uniform Texture2D dampentex;
-[uniform_func="SetGridSize"] uniform vec4 grid_size;
+[uniform_func="SetPrevHeight"] uniform Texture2D prevtex;
+[uniform_func="SetCurrHeight"] uniform Texture2D currtex;
+[uniform_func="SetDampenTex"] uniform Texture2D dampentex;
+[uniform_func="SetWaterSize"] uniform vec4 water_size;
 [uniform_func="SetWaveSpeed"] uniform vec4 speed;
+[uniform_func="SetSampleUnit"] uniform vec2 unit;
 [uniform_func="SetPositionWeight"] uniform vec4 posweight;
 [uniform_func="SetDeltaTime"] uniform float deltatime;
 
@@ -33,21 +35,22 @@ VsOutput vs_main(VSInput input) {
 
 [system="true" semantic="target"]
 vec4 ps_main(VsOutput o) {
-  vec4 h_x1y1 = sample2D(prevtex, o.texcoord0);
-  vec4 h_x0y1 = sample2D(prevtex, o.texcoord0);
-  vec4 h_x2y1 = sample2D(prevtex, o.texcoord0);
-  vec4 h_x1y0 = sample2D(prevtex, o.texcoord0);
-  vec4 h_x1y2 = sample2D(prevtex, o.texcoord0);
+  float h_x1y1 = sample2D(currtex, o.texcoord0);
+  float h_x0y1 = sample2D(currtex, o.texcoord0 + (unit * vec2(-1.0f,  0.0f))).x;
+  float h_x2y1 = sample2D(currtex, o.texcoord0 + (unit * vec2( 1.0f,  0.0f))).x;
+  float h_x1y0 = sample2D(currtex, o.texcoord0 + (unit * vec2( 0.0f, -1.0f))).x;
+  float h_x1y2 = sample2D(currtex, o.texcoord0 + (unit * vec2( 0.0f,  1.0f))).x;
+  float prev_height = sample2D(prevtex, o.texcoord0);
   vec4 dampening = sample2D(dampentex, o.texcoord0);
   float acceleration = dampening * speed.y * (
       h_x0y1 + h_x2y1 + h_x1y0 + h_x1y2 - 4.0f * h_x1y1);
-  float new_height = posweight.x * height_x1y1 -
-      posweight.y * prev_height.x +
+  float new_height = posweight.x * h_x1y1 -
+      posweight.y * prev_height +
       acceleration * deltatime;
 
   // calc normal
-  vec3 dydx = vec3(grid_size.x, h_x2y1 - h_x1y1, 0.0f);
-  vec3 dydz = vec3(0.0f, h_x1y2 - h_x1y1, -grid_size.z);
+  vec3 dydx = vec3(water_size.x, h_x2y1 - h_x1y1, 0.0f);
+  vec3 dydz = vec3(0.0f, h_x1y2 - h_x1y1, -water_size.z);
   vec3 normal = normalize(cross(dydx, dydz));
 
   return vec4(new_height, normal);
